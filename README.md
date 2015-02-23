@@ -11,8 +11,7 @@ through the soundcard.
 
 
 ### Example of converting text ###
-```
-python
+```python
 
 from morsecodelib import text
 text.text_to_code('testing text to code converSION!')
@@ -23,8 +22,7 @@ This prints:
 
 ### Example of playing sound ###
 
-```
-python
+```python
 from morsecodelib import sound
 morse_sound = sound.MorseSoundPlayer()
 morse_sound.text_to_sound('HI THERE THIS IS A TEST')
