@@ -5,7 +5,7 @@ Will change to some config-file reader later, maybe.
 """
 
 
-SAMPLE_RATE = 44100
+SAMPLE_RATE = 22050
 FREQUENCY = 600
 
 WORDS_PER_MINUTE = 15

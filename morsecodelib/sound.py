@@ -3,6 +3,8 @@ Make sounds from Morse code data
 """
 
 import time
+from array import array
+import math 
 
 import pygame
 import numpy
@@ -16,9 +18,14 @@ class MorseSoundPlayer(object):
     Takes text and renders it as sound on the sound card
     """
     def __init__(self):
-        pygame.mixer.pre_init(44100, -16, 1, buffer=4096)
+        """
+        Set up the mixer and tone. 
+        
+        Mixer buffer should be small to minimize latency. 
+        """
+        pygame.mixer.pre_init(config.SAMPLE_RATE, size = -16, channels = 1, buffer = 64)
         pygame.init()
-        self.tone = generate_tone()
+        self.tone = ToneSound(frequency = config.FREQUENCY, volume = .5)
 
     def text_to_sound(self, message_text):
         """
@@ -60,54 +67,45 @@ class MorseSoundPlayer(object):
         time.sleep(duration)
         self.tone.stop()
 
-def generate_tone(shape='sine', freq=440.0, vol=1.0):
-    """
-    create a pygame.mixer.Sound object of a sine wave
+class ToneSound(pygame.mixer.Sound):
+    def __init__(self, frequency, volume):
+        self.frequency = frequency
+        pygame.mixer.Sound.__init__(self, self.build_samples())
+        self.set_volume(volume)
+
+    def build_samples(self, shape = 'sine'):
+        mixer_frequency, mixer_format, _channels = pygame.mixer.get_init()
+        period = int(round(mixer_frequency / self.frequency))
+        
+        amplitude = 2 ** (abs(mixer_format) - 1) - 1
+        if shape == 'sine':
+            samples = self.sine_wave(amplitude, period)
+        elif shape=='square':
+            samples = self.square_wave(amplitude, period)
+           
+        return samples
     
-    Based on: http://www.pygame.org/project-pitch+perfect-1689-2947.html
+    def _init_samples(self, period):
+        return array("h", [0] * period)
     
-    Parameters
-    ----------
-    freq : float
-        frequency in Hz
-    vol : float
-        relative volume of returned sound; will be clipped into
-        range 0.0 to 1.0
-    """
-
-    # Get playback values that mixer was initialized with.
-    (pb_freq, pb_bits, pb_chns) = pygame.mixer.get_init()
-
-    # Clip range of volume.
-    vol = numpy.clip(vol, 0.0, 1.0)
-
-    # multiplier and length pan out the size of the sample to help
-    # keep the mixer busy between calls to channel.queue()
-    multiplier = int(freq / 24.0)
-    length = max(1, int(float(pb_freq) / freq * multiplier))
+    def sine_wave(self, amplitude, period):
+        samples = self._init_samples(period)
+        for time in xrange(period):
+            samples[time] = int(amplitude * math.sin(2*math.pi*time/period))
+        return samples
     
-    # Create a one-dimensional array with linear values.
-    lin = numpy.linspace(0.0, multiplier, num=length, endpoint=False)
-    ary = numpy.sin(lin * 2.0 * numpy.pi)
+    def square_wave(self, amplitude, period):
+        samples = self._init_samples(period)
+        for time in xrange(period):
+            if time < period / 2:
+                samples[time] = amplitude
+            else:
+                samples[time] = -amplitude
+        return samples
+          
 
-    # If mixer is in stereo mode, double up the array information for
-    # each channel.
-    if pb_chns == 2:
-        ary = numpy.repeat(ary[..., numpy.newaxis], 2, axis=1)
-
-    if pb_bits == 8:
-        # Adjust for volume and 8-bit range.
-        snd_ary = ary * vol * 127.0
-        return pygame.sndarray.make_sound(snd_ary.astype(numpy.uint8) + 128)
-    elif pb_bits == -16:
-        # Adjust for 16-bit range.
-        snd_ary = ary * vol * float((1 << 15) - 1)
-        return pygame.sndarray.make_sound(snd_ary.astype(numpy.int16))
-    else:
-        raise RuntimeError("pygame.mixer playback bit-size unsupported."
-                            "Should be either 8 or -16.")
 
 if __name__=='__main__':   
     morse_sound = MorseSoundPlayer()
     #morse_sound.text_to_sound('HI THERE THIS IS A TEST')
-    morse_sound.text_to_sound('MMK MKM MMMKK')
+    morse_sound.text_to_sound('HELLO THERE THIS IS NICK')
