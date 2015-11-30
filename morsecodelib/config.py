@@ -1,13 +1,22 @@
 """
 Configuration options for morsecodelib
 
-Will change to some config-file reader later, maybe. 
+Will change to some config-file reader later, maybe.
 """
 
+class Config(object):
+    def __init__(self):
+        self.SAMPLE_RATE = 22050
+        self.FREQUENCY = 600
 
-SAMPLE_RATE = 22050
-FREQUENCY = 600
+        self.WORDS_PER_MINUTE = 15
 
-WORDS_PER_MINUTE = 15
-DIT_DURATION = 20 * 0.060 / WORDS_PER_MINUTE # PARIS @ 20WPM = 60ms/dit
-DAH_DURATION = DIT_DURATION * 3.0
+    @property
+    def DIT_DURATION(self):
+        return 20 * 0.060 / self.WORDS_PER_MINUTE  # PARIS @ 20WPM = 60ms/dit, so a dit at 15 WPM = 0.060s * 20/15
+
+    @property
+    def DAH_DURATION(self):
+        return self.DIT_DURATION * 3.0
+
+config = Config()

@@ -42,12 +42,12 @@ def code_to_text(code):
     >>> text_to_code('.... ..')
     'hi'
     """
-    
+
     text = []
     for morse_word in code.split('  '):
         word = []
         for morse_sequence in morse_word.split(' '):
-            word.append(alphabet.code_to_letters[morse_sequence])
+            letter = alphabet.code_to_letters.get(morse_sequence, '&')
+            word.append(letter)
         text.append(''.join(word))
     return ' '.join(text)
-    
