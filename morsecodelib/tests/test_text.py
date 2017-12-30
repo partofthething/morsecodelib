@@ -1,5 +1,6 @@
+# -*- coding: utf-8 -*-
 '''
-Unit tests 
+Unit tests
 '''
 import unittest
 
@@ -13,7 +14,7 @@ class TestText(unittest.TestCase):
     def setUp(self):
         self.message_text = 'testing text to code converSION!'
         self.message_code = ('- . ... - .. -. --.  - . -..- -  - ---  '
-                             '-.-. --- -.. .  -.-. ... .. --- -. -.-.--')
+                             '-.-. --- -.. .  -.-. --- -. ...- . .-. ... .. --- -. -.-.--')
 
     def test_text_to_code(self):
         result = text.text_to_code(self.message_text)
@@ -34,5 +35,5 @@ class TestText(unittest.TestCase):
         self.assertEqual(code1, code2)
 
 if __name__ == "__main__":
-    #import sys;sys.argv = ['', 'Test.testName']
+    # import sys;sys.argv = ['', 'Test.testName']
     unittest.main()

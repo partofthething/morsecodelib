@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Make sounds or light pulses from Morse code data
 """
@@ -10,6 +11,7 @@ try:
     import pygame
 except ImportError:
     pygame = None
+from six.moves import xrange
 
 from morsecodelib import config
 from morsecodelib import text
@@ -17,9 +19,9 @@ from morsecodelib import text
 
 class MorsePlayer(object):
     """
-    Takes text and renders it as something 
-    
-    Use subclasses to choose sound vs. laser vs. whatever. 
+    Take text and render it as something.
+
+    Use subclasses to choose sound vs. laser vs. whatever.
     """
 
     def text_to_sound(self, message_text):
@@ -66,7 +68,7 @@ class MorsePlayer(object):
 
 class MorseSoundPlayer(MorsePlayer):
     """
-    Makes audible tones with speaker. 
+    Makes audible tones with speaker.
     """
     def __init__(self):
         """

@@ -1,18 +1,20 @@
+# -*- coding: utf-8 -*-
 """
 Convert Morse code <--> text
 """
 
-import alphabet
+from morsecodelib import alphabet
+
 
 def text_to_code(text):
     """
     Convert text to Morse code symbols
-    
+
     Parameters
     ----------
     text : str
-        text to convert to Morse code. 
-        
+        text to convert to Morse code.
+
     Examples
     --------
     >>> text_to_code('hi')
@@ -26,17 +28,18 @@ def text_to_code(text):
         code.append(' '.join(morse_word))
     return '  '.join(code)
 
+
 def code_to_text(code):
     """
-    Convert Morse code to text. 
-    
+    Convert Morse code to text.
+
     Double spaces are considered gaps between words
-    
+
     Parameters
     ----------
     code : str
-        Morse code string to convert to text  
-        
+        Morse code string to convert to text
+
     Examples
     --------
     >>> text_to_code('.... ..')
