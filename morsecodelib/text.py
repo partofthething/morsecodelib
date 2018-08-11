@@ -8,7 +8,9 @@ from morsecodelib import alphabet
 
 def text_to_code(text):
     """
-    Convert text to Morse code symbols
+    Convert text to Morse code symbols.
+
+    If an invalid character is encountered, it is rendered as a question mark.
 
     Parameters
     ----------
@@ -24,7 +26,8 @@ def text_to_code(text):
     for word in text.split():
         morse_word = []
         for character in word:
-            morse_word.append(alphabet.letters_to_code[character.upper()])
+            morse_word.append(alphabet.letters_to_code.get(character.upper(),
+                                                           alphabet.letters_to_code['?']))
         code.append(' '.join(morse_word))
     return '  '.join(code)
 

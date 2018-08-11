@@ -70,13 +70,15 @@ class MorseSoundPlayer(MorsePlayer):
     """
     Makes audible tones with speaker.
     """
+
     def __init__(self):
         """
         Set up the mixer and tone.
 
         Mixer buffer should be small to minimize latency.
         """
-        pygame.mixer.pre_init(config.config.SAMPLE_RATE, size=-16, channels=1, buffer=64)
+        pygame.mixer.pre_init(config.config.SAMPLE_RATE,
+                              size=-16, channels=1, buffer=64)
         pygame.init()
         self.tone = ToneSound(frequency=config.config.FREQUENCY, volume=.5)
 
@@ -87,6 +89,7 @@ class MorseSoundPlayer(MorsePlayer):
 
     def stop(self):
         pygame.quit()
+
 
 if pygame:
     class ToneSound(pygame.mixer.Sound):
@@ -113,7 +116,8 @@ if pygame:
         def sine_wave(self, amplitude, period):
             samples = self._init_samples(period)
             for time in xrange(period):
-                samples[time] = int(amplitude * math.sin(2 * math.pi * time / period))
+                samples[time] = int(
+                    amplitude * math.sin(2 * math.pi * time / period))
             return samples
 
         def square_wave(self, amplitude, period):
@@ -124,7 +128,6 @@ if pygame:
                 else:
                     samples[time] = -amplitude
             return samples
-
 
 
 if __name__ == '__main__':

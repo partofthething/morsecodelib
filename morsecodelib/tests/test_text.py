@@ -5,6 +5,8 @@ Unit tests
 import unittest
 
 from morsecodelib import text
+from morsecodelib import alphabet
+
 
 class TestText(unittest.TestCase):
     """
@@ -33,6 +35,15 @@ class TestText(unittest.TestCase):
         code2 = text.text_to_code(text1)
         self.assertEqual(text1, self.message_text.upper())
         self.assertEqual(code1, code2)
+
+    def test_extended_letters(self):
+        self.assertIn(u'\u0635', alphabet.letters_to_code.keys())
+        char1 = 'ه'
+        char2 = 'س'
+        # note that this script is printed right to left.
+        self.assertEqual(text.text_to_code(
+            char1 + char2), text.text_to_code('ES'))
+
 
 if __name__ == "__main__":
     # import sys;sys.argv = ['', 'Test.testName']
